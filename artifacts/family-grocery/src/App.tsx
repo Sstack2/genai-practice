@@ -12,33 +12,74 @@ const queryClient = new QueryClient();
 
 type Step = 'setup' | 'plan' | 'compare' | 'confirmed';
 type StorePlan = 'usual' | 'save';
+type MealType = 'Breakfast' | 'Lunch' | 'Dinner';
 
 const meals = [
-  { day: 'Mon', name: 'Lemon chicken & roasted broccoli', description: 'Sheet-pan chicken, potatoes, broccoli, and a bright lemon finish.', cost: 18.6 },
-  { day: 'Tue', name: 'Black bean taco bowls', description: 'Brown rice, seasoned beans, corn, avocado, and crunchy cabbage.', cost: 15.9 },
-  { day: 'Wed', name: 'Turkey meatballs with marinara', description: 'Tender meatballs over spaghetti with a simple side salad.', cost: 22.4 },
-  { day: 'Thu', name: 'Ginger veggie fried rice', description: 'Eggs, frozen vegetables, edamame, and leftover-friendly rice.', cost: 13.8 },
-  { day: 'Fri', name: 'Salmon, couscous & cucumber salad', description: 'Roasted salmon with herbs, couscous, and a cool yogurt dressing.', cost: 24.2 },
+  { type: 'Breakfast' as MealType, day: 'Mon', name: 'Banana peanut-butter oatmeal', description: 'Warm rolled oats with banana and a spoon of peanut butter.', cost: 3.1 },
+  { type: 'Breakfast' as MealType, day: 'Tue', name: 'Spinach eggs & whole-grain toast', description: 'Soft eggs with spinach and toast on the side.', cost: 4.85 },
+  { type: 'Breakfast' as MealType, day: 'Wed', name: 'Yogurt, oats & banana bowls', description: 'Plain yogurt topped with oats and sliced banana.', cost: 4.9 },
+  { type: 'Breakfast' as MealType, day: 'Thu', name: 'Apple-cinnamon oatmeal', description: 'Oats simmered with apples and cinnamon.', cost: 3.6 },
+  { type: 'Breakfast' as MealType, day: 'Fri', name: 'Bean & egg breakfast tacos', description: 'Eggs and black beans in warm tortillas with salsa.', cost: 5.7 },
+  { type: 'Breakfast' as MealType, day: 'Sat', name: 'Peanut-butter toast & fruit', description: 'Whole-grain toast with peanut butter and fresh fruit.', cost: 4.5 },
+  { type: 'Breakfast' as MealType, day: 'Sun', name: 'Potato, spinach & egg skillet', description: 'Crisp potatoes with eggs and a handful of greens.', cost: 6 },
+  { type: 'Lunch' as MealType, day: 'Mon', name: 'Black bean & rice bowls', description: 'Brown rice, seasoned beans, cabbage, and salsa.', cost: 5 },
+  { type: 'Lunch' as MealType, day: 'Tue', name: 'Chicken & carrot wraps', description: 'Chicken, crunchy carrots, and greens rolled in tortillas.', cost: 6.4 },
+  { type: 'Lunch' as MealType, day: 'Wed', name: 'Lentil tomato soup & toast', description: 'A simple lentil soup with tomatoes, carrots, and whole-grain toast.', cost: 6.6 },
+  { type: 'Lunch' as MealType, day: 'Thu', name: 'Chickpea spinach bowls', description: 'Chickpeas and spinach over brown rice with a yogurt dressing.', cost: 5.8 },
+  { type: 'Lunch' as MealType, day: 'Fri', name: 'Tuna & apple sandwiches', description: 'Tuna sandwiches on whole-grain bread with apple slices.', cost: 6.4 },
+  { type: 'Lunch' as MealType, day: 'Sat', name: 'Egg salad & carrot sticks', description: 'Egg salad on toast with fresh carrots on the side.', cost: 5.5 },
+  { type: 'Lunch' as MealType, day: 'Sun', name: 'Salsa bean & rice bowls', description: 'A quick bowl of rice, beans, vegetables, and salsa.', cost: 5.2 },
+  { type: 'Dinner' as MealType, day: 'Mon', name: 'Sheet-pan chicken & potatoes', description: 'Chicken thighs roasted with potatoes and carrots.', cost: 9.5 },
+  { type: 'Dinner' as MealType, day: 'Tue', name: 'Black bean cabbage tacos', description: 'Black beans, crunchy cabbage, and a little cheese in tortillas.', cost: 8.2 },
+  { type: 'Dinner' as MealType, day: 'Wed', name: 'Lentil tomato pasta', description: 'Whole-wheat pasta with tomato lentils and spinach.', cost: 8.7 },
+  { type: 'Dinner' as MealType, day: 'Thu', name: 'Vegetable egg fried rice', description: 'Brown rice tossed with eggs and frozen vegetables.', cost: 7.8 },
+  { type: 'Dinner' as MealType, day: 'Fri', name: 'Chicken, rice & greens', description: 'Seasoned chicken with brown rice and spinach.', cost: 10.2 },
+  { type: 'Dinner' as MealType, day: 'Sat', name: 'Chickpea tomato curry', description: 'Chickpeas and tomatoes served over rice.', cost: 8.7 },
+  { type: 'Dinner' as MealType, day: 'Sun', name: 'Whole-wheat pasta & beans', description: 'Pasta with beans, greens, and a simple tomato sauce.', cost: 9.35 },
 ];
 
 const groceryItems = [
-  { item: 'Chicken breasts', quantity: '2.2 lb', price: 11.4 },
-  { item: 'Salmon fillets', quantity: '1.5 lb', price: 17.9 },
-  { item: 'Ground turkey', quantity: '1.5 lb', price: 9.6 },
-  { item: 'Black beans', quantity: '3 cans', price: 3.3 },
-  { item: 'Eggs', quantity: '1 dozen', price: 4.1 },
-  { item: 'Brown rice', quantity: '2 lb bag', price: 3.8 },
-  { item: 'Spaghetti', quantity: '1 box', price: 2.1 },
-  { item: 'Couscous', quantity: '1 box', price: 2.8 },
-  { item: 'Broccoli & cabbage', quantity: '2 heads', price: 5.7 },
-  { item: 'Frozen vegetables', quantity: '1 bag', price: 2.6 },
-  { item: 'Potatoes', quantity: '3 lb bag', price: 4.2 },
-  { item: 'Avocado & cucumber', quantity: '4 items', price: 5.4 },
-  { item: 'Pantry extras', quantity: 'lemon, herbs, yogurt', price: 7.9 },
+  { item: 'Rolled oats', quantity: '4 lb', price: 4 },
+  { item: 'Bananas', quantity: '5 lb', price: 4.5 },
+  { item: 'Peanut butter', quantity: '2 jars', price: 5 },
+  { item: 'Eggs', quantity: '3 dozen', price: 10 },
+  { item: 'Whole-grain bread', quantity: '3 loaves', price: 7.5 },
+  { item: 'Milk', quantity: '2 gallons', price: 6.5 },
+  { item: 'Apples', quantity: '4 lb', price: 5 },
+  { item: 'Plain yogurt', quantity: '1 tub', price: 4 },
+  { item: 'Frozen berries', quantity: '1 bag', price: 3.5 },
+  { item: 'Brown rice', quantity: '10 lb', price: 8 },
+  { item: 'Dry lentils', quantity: '3 lb', price: 4 },
+  { item: 'Black beans', quantity: '8 cans', price: 8 },
+  { item: 'Chicken thighs', quantity: '4 lb', price: 8 },
+  { item: 'Whole-wheat pasta', quantity: '3 lb', price: 3.5 },
+  { item: 'Corn tortillas', quantity: '2 packs', price: 4 },
+  { item: 'Frozen vegetables', quantity: '3 bags', price: 5.5 },
+  { item: 'Carrots', quantity: '5 lb', price: 4 },
+  { item: 'Potatoes', quantity: '10 lb', price: 5.5 },
+  { item: 'Canned tomatoes', quantity: '4 cans', price: 4 },
+  { item: 'Spinach', quantity: '1 bag', price: 2 },
+  { item: 'Shredded cheese', quantity: '1 lb', price: 4 },
+  { item: 'Tuna', quantity: '3 cans', price: 3.75 },
+  { item: 'Chickpeas', quantity: '2 cans', price: 2 },
+  { item: 'Onions', quantity: '3 lb', price: 2.5 },
+  { item: 'Salsa', quantity: '1 jar', price: 2 },
+  { item: 'Cooking oil & seasoning allowance', quantity: '1 set', price: 4 },
+  { item: 'Seasonal fruit top-up', quantity: '4 lb', price: 5.5 },
+  { item: 'Cabbage, cucumber & garlic', quantity: '1 bundle', price: 5.75 },
 ];
 
 const money = (value: number) => `$${value.toFixed(2)}`;
 const wholeMoney = (value: number) => `$${Math.round(value)}`;
+const FAMILY_OF_SIX_BASKET = groceryItems.reduce((total, item) => total + item.price, 0);
+const CONVENIENCE_PREMIUM_FOR_SIX = 9.6;
+const getBasketTotal = (plan: StorePlan, household: number) => {
+  const familyOfSixTotal = FAMILY_OF_SIX_BASKET + (plan === 'usual' ? CONVENIENCE_PREMIUM_FOR_SIX : 0);
+  return Math.round(familyOfSixTotal * (household / 6) * 100) / 100;
+};
+const getSavings = (household: number) =>
+  Math.round(CONVENIENCE_PREMIUM_FOR_SIX * (household / 6) * 100) / 100;
+
 const scaledQuantity = (quantity: string, scale: number) => {
   const match = quantity.match(/^(\d+(?:\.\d+)?)\s*(.*)$/);
   if (!match) return quantity;
@@ -52,7 +93,7 @@ const scaledQuantity = (quantity: string, scale: number) => {
 function Progress({ step }: { step: Step }) {
   const steps: { id: Step; label: string }[] = [
     { id: 'setup', label: 'Your week' },
-    { id: 'plan', label: 'Dinner plan' },
+    { id: 'plan', label: 'Meal plan' },
     { id: 'compare', label: 'Store options' },
     { id: 'confirmed', label: 'Confirmed' },
   ];
@@ -76,7 +117,7 @@ function Shell({ children, step }: { children: ReactNode; step: Step }) {
       <div className="shell-grid">
         <aside className="side-rail">
           <div className="brand-mark"><span className="brand-dot">GT</span> Good Table</div>
-          <p className="rail-copy">A small plan for the real week ahead: five dinners, one grocery run, no guesswork.</p>
+          <p className="rail-copy">A practical plan for the whole week: three meals a day, one grocery list, no guesswork.</p>
           <div className="rail-note">Sample mode<br />Prices, places, and travel times are illustrative demo data.</div>
         </aside>
         <main className="main-area">
@@ -104,8 +145,8 @@ function Setup({ household, budget, setHousehold, setBudget, onContinue }: {
   return (
     <>
       <p className="eyebrow">Start with the week you actually have</p>
-      <h1 className="page-title">Good dinners, without the budget drift.</h1>
-      <p className="page-intro">Tell us who is eating and what you want to spend. We’ll shape five practical dinners, then lay out the tradeoff between one easy stop and a money-saving second stop.</p>
+      <h1 className="page-title">A full week of meals, within your budget.</h1>
+      <p className="page-intro">Tell us who is eating and what you want to spend. We’ll plan breakfast, lunch, and dinner for seven days, then compare one easy stop with a lower-cost second stop.</p>
       <div className="setup-layout" style={{ marginTop: '1.7rem' }}>
         <section className="panel setup-card" aria-labelledby="week-details-heading">
           <div className="panel-heading">
@@ -130,7 +171,7 @@ function Setup({ household, budget, setHousehold, setBudget, onContinue }: {
               </button>
             ))}
           </div>
-          <label className="field-label" htmlFor="budget-input">Weekly dinner budget</label>
+          <label className="field-label" htmlFor="budget-input">Weekly grocery budget</label>
           <div className="money-input">
             <span aria-hidden="true">$</span>
             <input
@@ -143,17 +184,17 @@ function Setup({ household, budget, setHousehold, setBudget, onContinue }: {
               value={budget || ''}
             />
           </div>
-          <p className="helper">A weekly target for the groceries behind these five dinners, not a live store quote.</p>
+          <p className="helper">This target covers the groceries for all 21 planned meals, not a live store quote.</p>
           <div className="button-row">
             <button className="primary-button" data-testid="build-plan-button" onClick={onContinue} type="button">
-              Build my dinner plan <ArrowRight size={16} aria-hidden="true" />
+              Build my weekly meal plan <ArrowRight size={16} aria-hidden="true" />
             </button>
           </div>
         </section>
         <aside className="panel snapshot-card" aria-label="Plan preview">
           <span className="snapshot-label">Your starting point</span>
-          <div className="snapshot-number">{household} × 5</div>
-          <div className="snapshot-detail">dinners for {household === 1 ? 'one person' : `${household} people`} with an illustrative {wholeMoney(budget)} weekly target.</div>
+           <div className="snapshot-number">{household} × 21</div>
+           <div className="snapshot-detail">meals for {household === 1 ? 'one person' : `${household} people`} with an illustrative {wholeMoney(budget)} weekly grocery target.</div>
           <div className="button-row">
             <span className="snapshot-detail">Good Table keeps the maths visible as you decide.</span>
           </div>
@@ -165,72 +206,72 @@ function Setup({ household, budget, setHousehold, setBudget, onContinue }: {
 }
 
 function Plan({ household, budget, onBack, onContinue }: { household: number; budget: number; onBack: () => void; onContinue: () => void }) {
-  const scale = household / 4;
+  const scale = household / 6;
   const list = useMemo(() => groceryItems.map((item) => ({ ...item, quantity: scaledQuantity(item.quantity, scale), price: item.price * scale })), [scale]);
-  const listTotal = list.reduce((sum, item) => sum + item.price, 0);
-  const plannedCost = 94.9 * scale;
-  const budgetRoom = budget - 129 * scale;
+  const listTotal = getBasketTotal('save', household);
+  const budgetRoom = budget - listTotal;
   return (
     <>
       <div className="plan-header">
         <div>
           <p className="eyebrow">A week with a little structure</p>
-          <h1>Five dinners, one useful list.</h1>
+          <h1>21 meals, one useful list.</h1>
         </div>
-        <div className="budget-readout">WEEKLY TARGET<strong data-testid="weekly-budget-value">{money(budget)}</strong></div>
+        <div className="budget-readout">WEEKLY GROCERY TARGET<strong data-testid="weekly-budget-value">{money(budget)}</strong></div>
       </div>
-      <p className="page-intro" style={{ marginTop: 0 }}>Familiar ingredients do double duty here, so Friday’s leftovers can make Thursday easier. Quantities and sample prices are scaled for {household} {household === 1 ? 'person' : 'people'}.</p>
+      <p className="page-intro" style={{ marginTop: 0 }}>A full seven days of breakfast, lunch, and dinner. Shared staples keep the six-person sample basket at {money(FAMILY_OF_SIX_BASKET)} before any convenience premium; quantities and estimates adjust for {household} {household === 1 ? 'person' : 'people'}.</p>
       <div className="plan-grid" style={{ marginTop: '1.4rem' }}>
-        <section aria-labelledby="meals-heading">
-          <div className="panel list-card">
-            <div className="list-head">
-              <h2 id="meals-heading">The dinner plan</h2>
-              <span>5 nights · sample</span>
-            </div>
-            <div className="meal-grid" style={{ marginTop: '.65rem' }}>
-              {meals.map((meal) => (
-                <article className="panel meal-row" key={meal.day}>
-                  <span className="day-tag">{meal.day}</span>
-                  <div><h3 className="meal-name">{meal.name}</h3><p className="meal-desc">{meal.description}</p></div>
-                  <span className="meal-cost">{money(meal.cost * scale)}</span>
-                </article>
-              ))}
-            </div>
-          </div>
+        <section className="meal-section-stack" aria-label="Seven-day meal plan">
+          {(['Breakfast', 'Lunch', 'Dinner'] as MealType[]).map((type) => (
+            <section className="panel list-card meal-section" key={type} aria-labelledby={`meal-type-${type.toLowerCase()}`}>
+              <div className="list-head">
+                <h2 id={`meal-type-${type.toLowerCase()}`}>{type}</h2>
+                <span>7 days · {household} {household === 1 ? 'person' : 'people'}</span>
+              </div>
+              <div className="meal-grid" style={{ marginTop: '.65rem' }}>
+                {meals.filter((meal) => meal.type === type).map((meal) => (
+                  <article className="panel meal-row" key={`${meal.type}-${meal.day}`} data-testid={`meal-${meal.type.toLowerCase()}-${meal.day.toLowerCase()}`}>
+                    <span className="day-tag">{meal.day}</span>
+                    <div><h3 className="meal-name">{meal.name}</h3><p className="meal-desc">{meal.description}</p></div>
+                    <span className="meal-cost" data-testid={`meal-cost-${meal.type.toLowerCase()}-${meal.day.toLowerCase()}`}>{money(meal.cost * scale)}</span>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
         </section>
         <section className="panel list-card" aria-labelledby="grocery-heading">
           <div className="list-head">
             <h2 id="grocery-heading">Consolidated grocery list</h2>
-            <span>{groceryItems.length} items</span>
+            <span>{groceryItems.length} items · 7 days</span>
           </div>
           <ul className="grocery-list">
             {list.map((item) => <li className="grocery-item" key={item.item}><span>{item.item}</span><span>{item.quantity} · {money(item.price)}</span></li>)}
           </ul>
           <div className="summary-line" style={{ marginTop: '1rem' }}><span>Illustrative list subtotal</span><strong data-testid="grocery-total">{money(listTotal)}</strong></div>
-          <p className="helper">Pantry basics are included as a small sample allowance. Store totals may vary.</p>
+          <p className="helper">This is the lower-cost sample basket for all 21 meals. Pantry basics are included; store totals may vary.</p>
         </section>
       </div>
       <section className="panel comparison-intro" style={{ marginTop: '1rem' }}>
-        <div style={{ display: 'flex', gap: '.75rem', alignItems: 'flex-start' }}><ListChecks size={19} aria-hidden="true" color="hsl(157 39% 31%)" /><div><strong style={{ fontSize: '.84rem' }}>A quick budget check</strong><p style={{ marginTop: '.25rem' }}>{budgetRoom >= 0 ? `${money(Math.abs(budgetRoom))} stays available after the sample two-store basket.` : `${money(Math.abs(budgetRoom))} over target with the sample two-store basket. Adjust the target or household size if needed.`}</p></div></div>
+        <div style={{ display: 'flex', gap: '.75rem', alignItems: 'flex-start' }}><ListChecks size={19} aria-hidden="true" color="hsl(157 39% 31%)" /><div><strong style={{ fontSize: '.84rem' }}>A quick budget check</strong><p style={{ marginTop: '.25rem' }}>{budgetRoom >= 0 ? `The lower-cost full-week basket is ${money(listTotal)}—${money(budgetRoom)} under your target.` : `The lower-cost full-week basket is ${money(listTotal)}, or ${money(Math.abs(budgetRoom))} over target. The comparison will show this before you confirm.`}</p></div></div>
       </section>
       <div className="button-row">
         <button className="secondary-button" data-testid="back-to-setup-button" onClick={onBack} type="button"><ArrowLeft size={16} aria-hidden="true" /> Edit week</button>
         <button className="primary-button" data-testid="compare-stores-button" onClick={onContinue} type="button">Compare store plans <ArrowRight size={16} aria-hidden="true" /></button>
       </div>
-      <p className="fine-print">The dinner costs above are recipe-level illustrations. Store comparison totals below represent the full sample basket needed for the week.</p>
+      <p className="fine-print">Meal and store prices are illustrative. The store comparison totals cover the grocery list for all 21 meals.</p>
     </>
   );
 }
 
-function OptionCard({ plan, household, selected, onSelect }: { plan: StorePlan; household: number; selected: boolean; onSelect: () => void }) {
-  const scale = household / 4;
+function OptionCard({ plan, household, budget, selected, onSelect }: { plan: StorePlan; household: number; budget: number; selected: boolean; onSelect: () => void }) {
   const isSave = plan === 'save';
-  const total = (isSave ? 124.8 : 147.2) * scale;
+  const total = getBasketTotal(plan, household);
   const miles = isSave ? '3.4 mi' : '1.2 mi';
   const time = isSave ? '18 min' : '7 min';
   return (
     <article className={`panel option-card ${isSave ? 'is-recommended' : ''}`} aria-label={`${isSave ? 'Two-store savings' : 'Single-store convenience'} option`}>
-      {isSave && <span className="recommend-tag">Save $22.40 sample</span>}
+      {isSave && <span className="recommend-tag">Save {money(getSavings(household))} sample</span>}
       <div className="option-title">
         <div>
           <h3>{isSave ? 'Split the shop' : 'Keep it simple'}</h3>
@@ -240,10 +281,13 @@ function OptionCard({ plan, household, selected, onSelect }: { plan: StorePlan; 
       </div>
       <div className="metric-stack">
         <div><span className="metric-label">Store stops</span><span className="metric-value">{isSave ? '2' : '1'}</span></div>
-        <div><span className="metric-label">Weekly saving</span><span className="metric-value">{isSave ? money(22.4 * scale) : '—'}</span></div>
+        <div><span className="metric-label">Weekly saving</span><span className="metric-value">{isSave ? money(getSavings(household)) : '—'}</span></div>
         <div><span className="metric-label">Extra driving</span><span className="metric-value">{isSave ? '+11 min' : '—'}</span></div>
       </div>
       <p className="option-note">{isSave ? 'Aldi covers pantry staples and produce at a lower sample price; Kroger fills the remaining items.' : 'One familiar stop, one list, and fewer minutes in the car. The premium is the convenience.'}</p>
+      <p className={`option-budget-status ${total <= budget ? 'fits-budget' : 'over-budget'}`} data-testid={`budget-status-${plan}`}>
+        {total <= budget ? `${money(budget - total)} under your weekly target` : `${money(total - budget)} over your weekly target`}
+      </p>
       <div className="trip-lines">
         <div className="trip-line"><span><MapPin size={13} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '.3rem' }} />Location distance</span><strong>{miles}</strong></div>
         <div className="trip-line"><span><Clock3 size={13} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '.3rem' }} />Illustrative drive time</span><strong>{time}</strong></div>
@@ -265,31 +309,31 @@ function Compare({ household, budget, selected, setSelected, onBack, onConfirm }
   onBack: () => void;
   onConfirm: () => void;
 }) {
-  const scale = household / 4;
-  const chosenTotal = selected === 'save' ? 124.8 * scale : selected === 'usual' ? 147.2 * scale : 0;
+  const chosenTotal = selected ? getBasketTotal(selected, household) : 0;
+  const chosenFitsBudget = !!selected && chosenTotal <= budget;
   return (
     <>
       <section className="panel comparison-intro">
         <p className="eyebrow">The part worth deciding</p>
         <h1>Is the second stop worth {selected === 'save' ? 'it to you' : '11 extra minutes'}?</h1>
-        <p>Both options cover the same five-dinner list for {household} {household === 1 ? 'person' : 'people'}. The numbers are sample estimates for a Kroger near home (1.2 mi) and an Aldi farther out (3.4 mi)—not live pricing or navigation.</p>
+        <p>Both options cover the same full week of 21 meals for {household} {household === 1 ? 'person' : 'people'}. The six-person lower-cost basket is {money(FAMILY_OF_SIX_BASKET)}; the numbers are sample estimates for Kroger and Aldi—not live pricing or navigation.</p>
       </section>
       <div className="compare-grid">
-        <OptionCard plan="usual" household={household} selected={selected === 'usual'} onSelect={() => setSelected('usual')} />
-        <OptionCard plan="save" household={household} selected={selected === 'save'} onSelect={() => setSelected('save')} />
+        <OptionCard plan="usual" household={household} budget={budget} selected={selected === 'usual'} onSelect={() => setSelected('usual')} />
+        <OptionCard plan="save" household={household} budget={budget} selected={selected === 'save'} onSelect={() => setSelected('save')} />
       </div>
       <section className="panel" style={{ padding: '1rem', marginTop: '.9rem' }}>
         <div style={{ display: 'flex', gap: '.7rem', alignItems: 'flex-start' }}>
           <CircleDollarSign size={20} aria-hidden="true" color="hsl(157 39% 31%)" />
           <div>
-            <strong style={{ fontSize: '.84rem' }}>Your {money(budget)} weekly target</strong>
-            <p className="helper" style={{ marginTop: '.25rem' }}>{selected ? `${money(chosenTotal)} sample basket selected · ${money(Math.max(0, budget - chosenTotal))} left before target.` : 'Choose exactly one plan to see how it lands against your target.'}</p>
+            <strong style={{ fontSize: '.84rem' }}>Your {money(budget)} all-meals weekly target</strong>
+            <p className="helper" style={{ marginTop: '.25rem' }} aria-live="polite">{selected ? chosenFitsBudget ? `${money(chosenTotal)} sample basket selected · ${money(budget - chosenTotal)} left before target.` : `${money(chosenTotal)} sample basket selected · ${money(chosenTotal - budget)} over target. Raise the budget or edit your week before confirming.` : 'Choose exactly one plan to see how it lands against your target.'}</p>
           </div>
         </div>
       </section>
       <div className="button-row">
-        <button className="secondary-button" data-testid="back-to-plan-button" onClick={onBack} type="button"><ArrowLeft size={16} aria-hidden="true" /> Back to dinners</button>
-        <button className="primary-button" data-testid="confirm-plan-button" disabled={!selected} onClick={onConfirm} type="button">Confirm {selected ? (selected === 'save' ? 'split shop' : 'Kroger shop') : 'a plan'} <Check size={16} aria-hidden="true" /></button>
+        <button className="secondary-button" data-testid="back-to-plan-button" onClick={onBack} type="button"><ArrowLeft size={16} aria-hidden="true" /> Back to meal plan</button>
+        <button className="primary-button" data-testid="confirm-plan-button" disabled={!selected || !chosenFitsBudget} onClick={onConfirm} type="button">{selected && !chosenFitsBudget ? 'Over budget' : `Confirm ${selected ? (selected === 'save' ? 'split shop' : 'Kroger shop') : 'a plan'}`} <Check size={16} aria-hidden="true" /></button>
       </div>
       <p className="fine-print">All prices, store names, distances, and travel times are illustrative demo data for this prototype.</p>
     </>
@@ -298,29 +342,29 @@ function Compare({ household, budget, selected, setSelected, onBack, onConfirm }
 
 function Confirmation({ household, budget, selected, onCompare, onReset }: { household: number; budget: number; selected: StorePlan; onCompare: () => void; onReset: () => void }) {
   const isSave = selected === 'save';
-  const total = (isSave ? 124.8 : 147.2) * (household / 4);
+  const total = getBasketTotal(selected, household);
   return (
     <>
       <div className="confirm-layout">
         <section className="panel confirmation-card">
           <span className="confirm-kicker">Week set · sample plan</span>
           <h1>{isSave ? 'The extra stop earns its keep.' : 'A simpler shop for this week.'}</h1>
-          <p>Your {isSave ? 'Kroger + Aldi split' : 'Kroger-only shop'} is set for {household} {household === 1 ? 'person' : 'people'}. You have a clear five-dinner plan and one consolidated list to take with you.</p>
+          <p>Your {isSave ? 'Kroger + Aldi split' : 'Kroger-only shop'} is set for {household} {household === 1 ? 'person' : 'people'}. You have a full seven-day plan covering breakfast, lunch, and dinner, plus one consolidated list.</p>
           <div className="button-row">
             <button className="secondary-button" data-testid="change-plan-button" onClick={onCompare} type="button">Change store plan</button>
           </div>
         </section>
         <section className="panel chosen-summary" aria-labelledby="chosen-heading">
           <h2 id="chosen-heading">Your chosen plan</h2>
-          <div className="summary-line"><span>Groceries</span><strong data-testid="confirmed-total">{money(total)} sample total</strong></div>
+          <div className="summary-line"><span>All 21 meals</span><strong data-testid="confirmed-total">{money(total)} sample total</strong></div>
           <div className="summary-line"><span>Stops</span><strong>{isSave ? 'Kroger + Aldi' : 'Kroger'}</strong></div>
           <div className="summary-line"><span>Travel</span><strong>{isSave ? '3.4 mi · 18 min sample' : '1.2 mi · 7 min sample'}</strong></div>
           <div className="summary-line"><span>Target</span><strong>{money(budget)} weekly</strong></div>
-          <p className="fine-print">Keep this screen handy with the dinner plan and grocery list above. Totals are illustrative, not live.</p>
+          <p className="fine-print">Keep this screen handy with the full meal plan and grocery list. Totals are illustrative, not live.</p>
         </section>
       </div>
       <section className="panel" style={{ marginTop: '1rem', padding: '1.1rem' }}>
-        <div style={{ display: 'flex', gap: '.7rem', alignItems: 'flex-start' }}><ShoppingBasket size={20} aria-hidden="true" color="hsl(157 39% 31%)" /><div><strong style={{ fontSize: '.85rem' }}>The week at a glance</strong><p className="helper">Five dinners · {groceryItems.length} grocery items · {isSave ? 'save the sample $22.40' : 'skip the extra stop'}.</p></div></div>
+        <div style={{ display: 'flex', gap: '.7rem', alignItems: 'flex-start' }}><ShoppingBasket size={20} aria-hidden="true" color="hsl(157 39% 31%)" /><div><strong style={{ fontSize: '.85rem' }}>The week at a glance</strong><p className="helper">21 meals · {groceryItems.length} grocery items · {isSave ? `save the sample ${money(getSavings(household))}` : 'skip the extra stop'}.</p></div></div>
       </section>
       <div className="button-row">
         <button className="text-button" data-testid="start-over-button" onClick={onReset} type="button"><RotateCcw size={14} aria-hidden="true" /> Start over</button>
@@ -331,14 +375,16 @@ function Confirmation({ household, budget, selected, onCompare, onReset }: { hou
 
 function Home() {
   const [step, setStep] = useState<Step>('setup');
-  const [household, setHousehold] = useState(4);
+  const [household, setHousehold] = useState(6);
   const [budget, setBudget] = useState(150);
   const [selected, setSelected] = useState<StorePlan | null>(null);
 
   const reset = () => { setStep('setup'); setSelected(null); };
+  const updateHousehold = (value: number) => { setHousehold(value); setSelected(null); };
+  const updateBudget = (value: number) => { setBudget(value); setSelected(null); };
   return (
     <Shell step={step}>
-      {step === 'setup' && <Setup household={household} budget={budget} setHousehold={setHousehold} setBudget={setBudget} onContinue={() => setStep('plan')} />}
+      {step === 'setup' && <Setup household={household} budget={budget} setHousehold={updateHousehold} setBudget={updateBudget} onContinue={() => setStep('plan')} />}
       {step === 'plan' && <Plan household={household} budget={budget} onBack={() => setStep('setup')} onContinue={() => setStep('compare')} />}
       {step === 'compare' && <Compare household={household} budget={budget} selected={selected} setSelected={setSelected} onBack={() => setStep('plan')} onConfirm={() => setStep('confirmed')} />}
       {step === 'confirmed' && selected && <Confirmation household={household} budget={budget} selected={selected} onCompare={() => setStep('compare')} onReset={reset} />}

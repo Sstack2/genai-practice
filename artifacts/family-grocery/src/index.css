@@ -125,9 +125,11 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
 .snapshot-number { margin: .7rem 0 .1rem; font-family: var(--app-font-mono); font-size: 2rem; letter-spacing: -.08em; }
 .snapshot-detail { color: hsl(163 17% 36%); font-size: .83rem; line-height: 1.45; }
 .plan-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1rem; }
-.plan-header h2 { margin: .4rem 0 0; font-size: clamp(1.65rem, 5vw, 2.5rem); letter-spacing: -.06em; line-height: 1; }
+.plan-header h1, .plan-header h2 { margin: .4rem 0 0; font-size: clamp(1.65rem, 5vw, 2.5rem); letter-spacing: -.06em; line-height: 1; }
 .plan-header .budget-readout { text-align: right; white-space: nowrap; font-family: var(--app-font-mono); font-size: .76rem; color: hsl(var(--muted-foreground)); }
 .budget-readout strong { display: block; margin-top: .25rem; color: hsl(var(--foreground)); font-size: 1rem; }
+.meal-section-stack { display: grid; gap: .8rem; }
+.meal-section .list-head h2 { margin: 0; font-size: 1.1rem; letter-spacing: -.04em; }
 .meal-grid { display: grid; gap: .65rem; }
 .meal-row { display: grid; grid-template-columns: 2rem 1fr auto; align-items: center; gap: .7rem; padding: .95rem; }
 .day-tag { align-self: start; color: hsl(var(--primary)); font-family: var(--app-font-mono); font-size: .68rem; text-transform: uppercase; }
@@ -137,13 +139,13 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
 .plan-grid { display: grid; gap: 1.1rem; }
 .list-card { padding: 1.1rem; }
 .list-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: .9rem; }
-.list-head h3 { margin: 0; font-size: 1.1rem; letter-spacing: -.04em; }
+.list-head h2, .list-head h3 { margin: 0; font-size: 1.1rem; letter-spacing: -.04em; }
 .list-head span { color: hsl(var(--muted-foreground)); font-family: var(--app-font-mono); font-size: .68rem; }
 .grocery-list { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem 1rem; margin: 1rem 0 0; padding: 0; list-style: none; }
 .grocery-item { display: flex; justify-content: space-between; gap: .4rem; color: hsl(var(--foreground)); font-size: .8rem; }
 .grocery-item span:last-child { color: hsl(var(--muted-foreground)); font-family: var(--app-font-mono); font-size: .67rem; text-align: right; }
 .comparison-intro { padding: 1.15rem; margin-bottom: 1rem; background: hsl(158 31% 90%); border-color: hsl(157 25% 74%); }
-.comparison-intro h2 { margin: .35rem 0; font-size: clamp(1.65rem, 5vw, 2.6rem); line-height: 1; letter-spacing: -.06em; }
+.comparison-intro h1, .comparison-intro h2 { margin: .35rem 0; font-size: clamp(1.65rem, 5vw, 2.6rem); line-height: 1; letter-spacing: -.06em; }
 .comparison-intro p { max-width: 630px; margin: 0; color: hsl(162 17% 35%); font-size: .86rem; line-height: 1.5; }
 .compare-grid { display: grid; gap: .8rem; }
 .option-card { position: relative; padding: 1.1rem; }
@@ -154,6 +156,9 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
 .option-title p { margin: .3rem 0 0; color: hsl(var(--muted-foreground)); font-size: .76rem; }
 .option-total { text-align: right; font-family: var(--app-font-mono); font-size: 1.35rem; letter-spacing: -.07em; }
 .option-total small { display: block; color: hsl(var(--muted-foreground)); font-size: .6rem; letter-spacing: .02em; }
+.option-budget-status { margin: -.55rem 0 .7rem; font-size: .76rem; font-weight: 700; }
+.option-budget-status.fits-budget { color: hsl(157 39% 31%); }
+.option-budget-status.over-budget { color: hsl(var(--destructive)); }
 .metric-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1.3rem 0; padding: .85rem 0; border-top: 1px solid hsl(var(--border)); border-bottom: 1px solid hsl(var(--border)); }
 .metric-label { color: hsl(var(--muted-foreground)); font-size: .64rem; line-height: 1.25; }
 .metric-value { display: block; margin-top: .25rem; font-family: var(--app-font-mono); font-size: .83rem; }
@@ -165,10 +170,10 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
 .confirmation-card { padding: 1.4rem; background: hsl(158 34% 23%); color: hsl(45 50% 98%); border: 0; overflow: hidden; position: relative; }
 .confirmation-card::after { content: ''; position: absolute; width: 13rem; height: 13rem; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; right: -6rem; top: -5rem; }
 .confirm-kicker { color: hsl(36 92% 68%); font-family: var(--app-font-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; }
-.confirmation-card h2 { max-width: 600px; margin: .6rem 0 .55rem; font-size: clamp(2rem, 7vw, 3.55rem); line-height: .98; letter-spacing: -.075em; }
+.confirmation-card h1, .confirmation-card h2 { max-width: 600px; margin: .6rem 0 .55rem; font-size: clamp(2rem, 7vw, 3.55rem); line-height: .98; letter-spacing: -.075em; }
 .confirmation-card p { max-width: 580px; margin: 0; color: rgba(255,250,234,.72); line-height: 1.5; font-size: .9rem; }
 .chosen-summary { padding: 1.1rem; }
-.chosen-summary h3 { margin: 0 0 1rem; font-size: 1.1rem; letter-spacing: -.04em; }
+.chosen-summary h2, .chosen-summary h3 { margin: 0 0 1rem; font-size: 1.1rem; letter-spacing: -.04em; }
 .summary-line { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-top: 1px solid hsl(var(--border)); font-size: .83rem; }
 .summary-line strong { font-family: var(--app-font-mono); font-weight: 400; text-align: right; }
 .fine-print { margin: 1.5rem 0 0; color: hsl(var(--muted-foreground)); font-size: .7rem; line-height: 1.5; }
