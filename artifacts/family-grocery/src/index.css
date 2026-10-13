@@ -146,9 +146,16 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
 .list-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; border-bottom: 1px solid hsl(var(--border)); padding-bottom: .9rem; }
 .list-head h2, .list-head h3 { margin: 0; font-size: 1.1rem; letter-spacing: -.04em; }
 .list-head span { color: hsl(var(--muted-foreground)); font-family: var(--app-font-mono); font-size: .68rem; }
-.grocery-list { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem 1rem; margin: 1rem 0 0; padding: 0; list-style: none; }
-.grocery-item { display: flex; justify-content: space-between; gap: .4rem; color: hsl(var(--foreground)); font-size: .8rem; }
-.grocery-item span:last-child { color: hsl(var(--muted-foreground)); font-family: var(--app-font-mono); font-size: .67rem; text-align: right; }
+.grocery-list { display: grid; grid-template-columns: 1fr; gap: .7rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+.grocery-item { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr) auto; align-items: center; gap: .55rem; color: hsl(var(--foreground)); font-size: .8rem; }
+.grocery-check { appearance: none; display: grid; place-content: center; width: 1.15rem; height: 1.15rem; margin: 0; border: 1.5px solid hsl(var(--border)); border-radius: 50%; background: hsl(var(--card)); cursor: pointer; transition: background .16s ease, border-color .16s ease, transform .16s ease; }
+.grocery-check::before { content: ''; width: .48rem; height: .27rem; border-left: 2px solid white; border-bottom: 2px solid white; transform: translateY(-.04rem) rotate(-45deg) scale(0); transition: transform .12s ease; }
+.grocery-check:checked { border-color: hsl(var(--primary)); background: hsl(var(--primary)); }
+.grocery-check:checked::before { transform: translateY(-.04rem) rotate(-45deg) scale(1); }
+.grocery-check:hover { transform: scale(1.08); }
+.grocery-name { min-width: 0; }
+.grocery-amount { color: hsl(var(--muted-foreground)); font-family: var(--app-font-mono); font-size: .67rem; text-align: right; white-space: nowrap; }
+.grocery-item.is-checked .grocery-name { color: hsl(var(--muted-foreground)); text-decoration: line-through; text-decoration-thickness: 1px; }
 .comparison-intro { padding: 1.15rem; margin-bottom: 1rem; background: hsl(158 31% 90%); border-color: hsl(157 25% 74%); }
 .comparison-intro h1, .comparison-intro h2 { margin: .35rem 0; font-size: clamp(1.65rem, 5vw, 2.6rem); line-height: 1; letter-spacing: -.06em; }
 .comparison-intro p { max-width: 630px; margin: 0; color: hsl(162 17% 35%); font-size: .86rem; line-height: 1.5; }
@@ -205,7 +212,6 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
   .step-line { max-width: none; }
   .meal-row { grid-template-columns: 1.8rem 1fr; }
   .meal-cost { grid-column: 2; }
-  .grocery-list { grid-template-columns: 1fr; }
   .plan-header { align-items: flex-start; }
   .plan-header .budget-readout { padding-top: .2rem; }
 }
