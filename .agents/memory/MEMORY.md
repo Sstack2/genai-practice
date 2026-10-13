@@ -1,0 +1,1 @@
+- [Bend Bites brand](bend-bites-brand.md) — The app name is Bend Bites; stylize ND in uppercase and use a shamrock as the i’s dot.

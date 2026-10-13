@@ -90,6 +90,27 @@ const scaledQuantity = (quantity: string, scale: number) => {
   return `${rounded} ${unit}`;
 };
 
+function Shamrock({ className }: { className: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="12" cy="6" r="4.2" />
+      <circle cx="7.2" cy="10.5" r="4.2" />
+      <circle cx="16.8" cy="10.5" r="4.2" />
+      <path d="M12 9.5v10c0 1.5-.8 2.7-2.2 3.6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BrandWordmark() {
+  return (
+    <span className="brand-wordmark" role="img" aria-label="Bend Bites">
+      <span aria-hidden="true">
+        Be<span className="brand-nd">ND</span> B<span className="wordmark-i">ı<Shamrock className="wordmark-shamrock" /></span>tes
+      </span>
+    </span>
+  );
+}
+
 function Progress({ step }: { step: Step }) {
   const steps: { id: Step; label: string }[] = [
     { id: 'setup', label: 'Your week' },
@@ -116,13 +137,13 @@ function Shell({ children, step }: { children: ReactNode; step: Step }) {
     <div className="app-shell">
       <div className="shell-grid">
         <aside className="side-rail">
-          <div className="brand-mark"><span className="brand-dot">GT</span> Good Table</div>
+          <div className="brand-mark"><span className="brand-dot"><Shamrock className="brand-shamrock" /></span><BrandWordmark /></div>
           <p className="rail-copy">A practical plan for the whole week: three meals a day, one grocery list, no guesswork.</p>
           <div className="rail-note">Sample mode<br />Prices, places, and travel times are illustrative demo data.</div>
         </aside>
         <main className="main-area">
           <header className="topbar">
-            <div className="mobile-brand"><span className="brand-dot">GT</span> Good Table</div>
+            <div className="mobile-brand"><span className="brand-dot"><Shamrock className="brand-shamrock" /></span><BrandWordmark /></div>
             <span className="sample-pill">Illustrative demo</span>
           </header>
           <div className="content-wrap">
@@ -196,11 +217,11 @@ function Setup({ household, budget, setHousehold, setBudget, onContinue }: {
            <div className="snapshot-number">{household} × 21</div>
            <div className="snapshot-detail">meals for {household === 1 ? 'one person' : `${household} people`} with an illustrative {wholeMoney(budget)} weekly grocery target.</div>
           <div className="button-row">
-            <span className="snapshot-detail">Good Table keeps the maths visible as you decide.</span>
+            <span className="snapshot-detail">Bend Bites keeps the maths visible as you decide.</span>
           </div>
         </aside>
       </div>
-      <p className="fine-print">Good Table is a planning prototype. It does not use location services, live pricing, accounts, or checkout.</p>
+      <p className="fine-print">Bend Bites is a planning prototype. It does not use location services, live pricing, accounts, or checkout.</p>
     </>
   );
 }
