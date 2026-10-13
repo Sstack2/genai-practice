@@ -78,19 +78,18 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
   padding: 2rem 1.5rem;
 }
 .brand-mark { display: flex; align-items: center; gap: .7rem; font-size: 1.2rem; font-weight: 700; letter-spacing: -.03em; }
-.brand-dot { width: 1.7rem; height: 1.7rem; display: grid; place-items: center; border-radius: 50%; background: hsl(36 92% 59%); color: hsl(158 34% 23%); font-family: var(--app-font-mono); font-size: .8rem; }
-.brand-shamrock { display: block; width: 1rem; height: 1rem; color: hsl(158 34% 23%); }
+.brand-symbol { display: block; width: 2rem; height: 2rem; flex: 0 0 auto; color: hsl(var(--primary)); }
+.side-rail .brand-symbol { color: hsl(45 50% 98%); }
 .brand-wordmark { display: inline-flex; align-items: baseline; white-space: nowrap; }
 .brand-nd { letter-spacing: -.045em; }
 .wordmark-i { position: relative; display: inline-block; }
-.wordmark-shamrock { position: absolute; top: -.18em; left: 50%; width: .48em; height: .48em; transform: translateX(-50%); color: hsl(var(--primary)); }
+.wordmark-shamrock { position: absolute; top: -.2em; left: 50%; width: .54em; height: .54em; transform: translateX(-50%); color: hsl(111 70% 37%); }
 .rail-copy { margin-top: 4.5rem; color: rgba(255, 250, 234, .62); font-size: .9rem; line-height: 1.55; }
 .rail-note { margin-top: 2rem; padding: 1rem; border: 1px solid rgba(255,255,255,.15); border-radius: .9rem; font-size: .78rem; line-height: 1.5; color: rgba(255, 250, 234, .75); }
 .main-area { min-width: 0; }
 .topbar { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.1rem .8rem; }
 .mobile-brand { display: flex; align-items: center; gap: .55rem; font-weight: 700; letter-spacing: -.03em; }
-.mobile-brand .brand-dot { width: 1.35rem; height: 1.35rem; font-size: .64rem; }
-.mobile-brand .brand-shamrock { width: .78rem; height: .78rem; }
+.mobile-brand .brand-symbol { width: 1.65rem; height: 1.65rem; }
 .sample-pill { border: 1px solid hsl(var(--border)); border-radius: 99px; padding: .35rem .6rem; color: hsl(var(--muted-foreground)); background: rgba(255, 252, 242, .55); font-family: var(--app-font-mono); font-size: .62rem; letter-spacing: .04em; text-transform: uppercase; }
 .content-wrap { width: min(100%, 1050px); margin: 0 auto; padding: .45rem 1.1rem 3.5rem; }
 .eyebrow { color: hsl(157 39% 31%); font-family: var(--app-font-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; }

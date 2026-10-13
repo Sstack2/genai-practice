@@ -90,13 +90,24 @@ const scaledQuantity = (quantity: string, scale: number) => {
   return `${rounded} ${unit}`;
 };
 
+function ForkLeaf({ className }: { className: string }) {
+  return (
+    <svg className={className} viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M29 59C27 44 22 33 15 25C11 20 7 13 6 7M29 59C27 43 23 32 18 25M29 59C30 43 28 32 23 23C19 17 16 11 15 5M29 59C32 43 33 32 30 23C28 17 27 11 28 5" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M35 39C34 26 42 12 58 5C58 22 52 36 37 42C36 41 35 40 35 39Z" fill="currentColor" />
+      <path d="M30 57C36 43 43 28 54 12" stroke="hsl(var(--background))" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M28 58C31 47 35 39 40 32" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function Shamrock({ className }: { className: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <circle cx="12" cy="6" r="4.2" />
-      <circle cx="7.2" cy="10.5" r="4.2" />
-      <circle cx="16.8" cy="10.5" r="4.2" />
-      <path d="M12 9.5v10c0 1.5-.8 2.7-2.2 3.6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M12 10.5C7.1 8.6 6.8 4.2 9 2.8c1.2-.8 2.6-.1 3 1.5.4-1.6 1.8-2.3 3-1.5 2.2 1.4 1.9 5.8-3 7.7Z" />
+      <path d="M10.7 11.1C7 7.3 2.8 8.1 2.5 11c-.3 2.6 2.2 4.1 5.2 2.9.8 3.4 4.2 4.2 5.9 1.1l-2.9-3.9Z" />
+      <path d="M13.3 11.1c3.7-3.8 7.9-3 8.2-.1.3 2.6-2.2 4.1-5.2 2.9-.8 3.4-4.2 4.2-5.9 1.1l2.9-3.9Z" />
+      <path d="M12 9.5c.2 5.4.7 9.1 3.5 12.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -137,13 +148,13 @@ function Shell({ children, step }: { children: ReactNode; step: Step }) {
     <div className="app-shell">
       <div className="shell-grid">
         <aside className="side-rail">
-          <div className="brand-mark"><span className="brand-dot"><Shamrock className="brand-shamrock" /></span><BrandWordmark /></div>
+          <div className="brand-mark"><ForkLeaf className="brand-symbol" /><BrandWordmark /></div>
           <p className="rail-copy">A practical plan for the whole week: three meals a day, one grocery list, no guesswork.</p>
           <div className="rail-note">Sample mode<br />Prices, places, and travel times are illustrative demo data.</div>
         </aside>
         <main className="main-area">
           <header className="topbar">
-            <div className="mobile-brand"><span className="brand-dot"><Shamrock className="brand-shamrock" /></span><BrandWordmark /></div>
+            <div className="mobile-brand"><ForkLeaf className="brand-symbol" /><BrandWordmark /></div>
             <span className="sample-pill">Illustrative demo</span>
           </header>
           <div className="content-wrap">
