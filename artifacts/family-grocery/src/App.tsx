@@ -82,7 +82,7 @@ const seeds: MealSeed[] = [
 
 const replacements: Partial<Record<IngredientKey, IngredientKey>> = {
   chicken: 'chickpeas', tuna: 'blackBeans', eggs: 'tofu', yogurt: 'veganYogurt',
-  cheese: 'veganCheese', bread: 'gfBread', pasta: 'gfPasta',
+  cheese: 'veganCheese',
 };
 const money = (n: number) => `$${n.toFixed(2)}`;
 const householdLabel = (n: number) => `${n} ${n === 1 ? 'person' : 'people'}`;
@@ -163,8 +163,10 @@ function Setup({ household, budget, diet, glutenFree, setHousehold, setBudget, s
     <p className="fine-print">BendBites is a planning prototype. It does not use location services, live pricing, accounts, or checkout.</p>
   </>;
 }
-function recipeSteps(meal: Meal) {
-  const ingredients = meal.ingredients.map(({ key, amount }) => `${unitLabel(amount, ingredientCatalog[key].unit)} ${describeIngredient(key, meal.note.includes('certified gluten-free'))}`).join(', ');
+function recipeSteps(meal: Meal, household: number) {
+  const scale = household / 6;
+  const glutenFree = meal.note.includes('certified gluten-free');
+  const ingredients = meal.ingredients.map(({ key, amount }) => `${unitLabel(amount * scale, ingredientCatalog[key].unit)} ${describeIngredient(key, glutenFree)}`).join(', ');
   const hotIngredients = meal.ingredients.filter(({ key }) => ['eggs', 'chicken', 'tofu', 'pasta', 'rice', 'lentils', 'potatoes', 'blackBeans', 'chickpeas', 'frozenVeg', 'tomatoes'].includes(key));
   const hotText = hotIngredients.map(({ key }) => ingredientCatalog[key].name.toLowerCase()).join(', ') || 'the main ingredients';
   return [
@@ -183,7 +185,7 @@ function Plan({ household, budget, meals, glutenFree, onBack, onContinue }: { ho
     <p className="page-intro" style={{ marginTop: 0 }}>Seven days of breakfast, lunch, and dinner. Ingredient quantities and estimates are scaled for {householdLabel(household)}; recipes, list, and totals all share the same ingredient data.</p>
     <div className="plan-grid" style={{ marginTop: '1.4rem' }}><section className="meal-section-stack" aria-label="Seven-day meal plan">{(['Breakfast', 'Lunch', 'Dinner'] as MealType[]).map((type) => <section className="panel list-card meal-section" key={type} aria-labelledby={`meal-type-${type.toLowerCase()}`}><div className="list-head"><h2 id={`meal-type-${type.toLowerCase()}`}>{type}</h2><span>7 days · {householdLabel(household)}</span></div><div className="meal-grid" style={{ marginTop: '.65rem' }}>{meals.filter((meal) => meal.type === type).map((meal) => {
       const mealCost = meal.ingredients.reduce((sum, ing) => sum + ing.amount * scale * ingredientCatalog[ing.key].price, 0);
-      const steps = recipeSteps(meal);
+       const steps = recipeSteps(meal, household);
       return <article className="panel meal-row" key={`${meal.type}-${meal.day}`} data-testid={`meal-${meal.type.toLowerCase()}-${meal.day.toLowerCase()}`}><span className="day-tag">{meal.day}</span><div className="meal-main"><h3 className="meal-name">{meal.title}</h3><p className="meal-desc">{meal.note}</p><span className="meal-cost" data-testid={`meal-cost-${meal.type.toLowerCase()}-${meal.day.toLowerCase()}`}>{money(mealCost)} ingredients</span><details className="recipe-disclosure"><summary data-testid={`recipe-toggle-${meal.type.toLowerCase()}-${meal.day.toLowerCase()}`}><span>How to make this</span><ChevronDown size={15} aria-hidden="true" /></summary><div className="recipe-content"><p className="recipe-meta"><Clock3 size={14} aria-hidden="true" /> {meal.prep} min prep · {meal.cook ? `${meal.cook} min cook` : 'no cooking'} · scaled for {householdLabel(household)}</p><h4>Ingredients</h4><ul>{meal.ingredients.map(({ key, amount }, i) => <li key={`${key}-${i}`}>{unitLabel(amount * scale, ingredientCatalog[key].unit)} {describeIngredient(key, meal.note.includes('certified gluten-free'))}</li>)}</ul><h4>Steps</h4><ol>{steps.map((step, i) => <li key={i}>{step}</li>)}</ol><p className="recipe-substitution">{meal.substitution}</p></div></details></div></article>;
     })}</div></section>)}</section>
       <section className="panel list-card" aria-labelledby="grocery-heading"><div className="list-head"><h2 id="grocery-heading">Consolidated grocery list</h2><span>{basket.length} ingredients · 7 days</span></div><ul className="grocery-list">{basket.map((item) => <li className="grocery-item" key={item.key}><span>{item.item}{item.check && <small className="label-check">Check GF label</small>}</span><span>{unitLabel(item.quantity, item.unit)} · {money(item.price)}</span></li>)}</ul><div className="summary-line" style={{ marginTop: '1rem' }}><span>Estimated ingredient subtotal</span><strong data-testid="grocery-total">{money(listTotal)}</strong></div><p className="helper">Usage quantities aggregated from these 21 recipes at seeded illustrative unit prices. Gluten-free label checks are marked where relevant.</p></section></div>
