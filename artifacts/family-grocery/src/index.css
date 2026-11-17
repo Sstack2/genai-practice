@@ -119,6 +119,21 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(227, 159, 38
 .money-input input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; padding: .78rem .35rem; color: hsl(var(--foreground)); font-family: var(--app-font-mono); font-size: 1.05rem; }
 .helper { margin: .55rem 0 0; color: hsl(var(--muted-foreground)); font-size: .76rem; line-height: 1.4; }
 .budget-required { margin: .45rem 0 0; color: hsl(var(--destructive)); font-size: .78rem; font-weight: 700; }
+.extra-week-card { margin-bottom: 1rem; padding: 1rem; border-color: hsl(157 25% 74%); background: hsl(158 31% 94%); }
+.extra-week-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.extra-week-heading h2 { margin: .25rem 0; font-size: 1.15rem; }
+.extra-week-heading .eyebrow { margin: 0; }
+.extra-week-preview { margin-top: .8rem; padding-top: .8rem; border-top: 1px solid hsl(var(--border)); }
+.sample-note { margin: 0 0 .75rem; color: hsl(var(--muted-foreground)); font-size: .72rem; }
+.week-cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.week-cost-grid > div { display: grid; gap: .2rem; padding: .7rem; border: 1px solid hsl(var(--border)); border-radius: .65rem; background: hsl(var(--card)); }
+.week-cost-grid strong { font-size: .74rem; }
+.week-cost-grid span { font-family: var(--app-font-mono); font-size: 1.05rem; }
+.week-cost-grid small { color: hsl(var(--muted-foreground)); font-size: .68rem; }
+.extra-week-delta { margin: .75rem 0; font-size: .8rem; font-weight: 700; }
+.changed-meals { font-size: .75rem; }
+.changed-meals summary { color: hsl(var(--primary)); cursor: pointer; font-weight: 700; }
+.changed-meals ul { display: grid; gap: .35rem; margin: .55rem 0; padding-left: 1.2rem; }
 .button-row { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.5rem; }
 .primary-button, .secondary-button, .text-button { border-radius: .68rem; padding: .78rem 1rem; border: 1px solid transparent; font-weight: 700; transition: transform .18s ease, background .18s ease; }
 .primary-button { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
