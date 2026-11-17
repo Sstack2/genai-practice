@@ -57,9 +57,12 @@ const ingredientCatalog = {
 type Store = 'kroger' | 'aldi';
 type StoreBuy = { packageSize: number; packages: number; quantity: number; cost: number };
 type BasketItem = {
-  key: IngredientKey; item: string; unit: string; needed: number; alreadyHave: number; remaining: number;
+  key: IngredientKey; item: string; unit: string; needed: number; alreadyHave: number; pantryEntered: number; pantryUnit: string; remaining: number;
   check: boolean; krogerBuy: StoreBuy; aldiBuy: StoreBuy;
 };
+// Average edible-size estimates used only to translate counted fruit into pounds;
+// bananas are weighed whole and unpeeled for checkout estimates.
+const pieceWeightLb: Partial<Record<IngredientKey, number>> = { apples: .33, banana: .26 };
 const packageSizes: Record<IngredientKey, Record<Store, number>> = {
   oats: { kroger: 2, aldi: 2 }, banana: { kroger: 1, aldi: 1 }, peanut: { kroger: 16, aldi: 16 },
   eggs: { kroger: 12, aldi: 12 }, spinach: { kroger: 5, aldi: 10 }, bread: { kroger: 20, aldi: 24 },
@@ -147,14 +150,21 @@ function getBasket(meals: Meal[], household: number, glutenFree: boolean, pantry
   for (const meal of meals) for (const ingredient of meal.ingredients) aggregate.set(ingredient.key, (aggregate.get(ingredient.key) || 0) + ingredient.amount * scale);
   return [...aggregate.entries()].map(([key, quantity]) => {
     const item = ingredientCatalog[key];
-    const alreadyHave = Math.max(0, pantry[key] ?? 0);
+    const pantryEntered = Math.max(0, pantry[key] ?? 0);
+    const pantryUnit = pieceWeightLb[key] ? 'pieces' : item.unit;
+    const alreadyHave = pantryEntered * (pieceWeightLb[key] ?? 1);
     const remaining = Math.max(0, quantity - alreadyHave);
     const makeBuy = (store: Store): StoreBuy => {
+      if (pieceWeightLb[key]) {
+        const packages = remaining > 0 ? Math.ceil(remaining / pieceWeightLb[key]!) : 0;
+        const estimatedLb = packages * pieceWeightLb[key]!;
+        return { packageSize: pieceWeightLb[key]!, packages, quantity: estimatedLb, cost: estimatedLb * item.price * (store === 'aldi' ? .9 : 1) };
+      }
       const packageSize = packageSizes[key][store];
       const packages = remaining > 0 ? Math.ceil(remaining / packageSize) : 0;
       return { packageSize, packages, quantity: packages * packageSize, cost: packages * packageSize * item.price * (store === 'aldi' ? .9 : 1) };
     };
-    return { key, item: item.name, unit: item.unit, needed: quantity, alreadyHave, remaining, check: glutenFree && 'check' in item && !!item.check, krogerBuy: makeBuy('kroger'), aldiBuy: makeBuy('aldi') };
+    return { key, item: item.name, unit: item.unit, needed: quantity, alreadyHave, pantryEntered, pantryUnit, remaining, check: glutenFree && 'check' in item && !!item.check, krogerBuy: makeBuy('kroger'), aldiBuy: makeBuy('aldi') };
   });
 }
 // Store premium follows household scaling, independent of which ingredients appear in the basket.
@@ -224,17 +234,25 @@ function Plan({ household, budget, meals, basket, estimates, checkedItems, onTog
       <section className="panel list-card" aria-labelledby="grocery-heading"><div className="list-head"><h2 id="grocery-heading">Consolidated grocery list</h2><span aria-live="polite">{checkedCount}/{basket.length} checked · 7 days</span></div><p className="helper">Amounts to buy are rounded to sample package sizes. Pantry amounts default to zero; prices and pack sizes are illustrative.</p><ul className="grocery-list">{basket.map((item) => {
         const splitStore: Store = aldiItems.has(item.key) ? 'aldi' : 'kroger';
         const splitBuy = splitStore === 'aldi' ? item.aldiBuy : item.krogerBuy;
-        const formatBuy = (buy: StoreBuy) => buy.packages ? `${buy.packages} × ${unitLabel(buy.packageSize, item.unit)}` : 'Already covered';
+        const formatBuy = (buy: StoreBuy) => {
+          if (!buy.packages) return 'Already covered';
+          if (pieceWeightLb[item.key]) {
+            const fruit = item.key === 'apples' ? 'apple' : 'banana';
+            const countLabel = `${buy.packages} ${fruit}${buy.packages === 1 ? '' : 's'}`;
+            return `${countLabel} · about ${Number(buy.quantity.toFixed(1))} lb`;
+          }
+          return `${buy.packages} × ${unitLabel(buy.packageSize, item.unit)}`;
+        };
         return <li className={`grocery-item ${checkedItems[item.key] ? 'is-checked' : ''}`} key={item.key}>
           <input className="grocery-check" type="checkbox" checked={!!checkedItems[item.key]} onChange={() => onToggleIngredient(item.key)} aria-label={`${checkedItems[item.key] ? 'Uncheck' : 'Check off'} ${item.item}`} data-testid={`grocery-check-${item.key}`} />
           <span className="grocery-name">{item.item}{item.check && <small className="label-check">Check GF label</small>}</span>
           <div className="grocery-quantity-grid">
             <div className="quantity-cell"><small>Needed for the week</small><strong>{unitLabel(item.needed, item.unit)}</strong></div>
-            <label className="quantity-cell pantry-cell"><span>Already have</span><span className="pantry-input-wrap"><input aria-label={`Already have ${item.item}`} data-testid={`pantry-${item.key}`} inputMode="decimal" min="0" step="any" type="number" value={item.alreadyHave || ''} onChange={(event) => onPantryChange(item.key, Math.max(0, Number(event.target.value) || 0))} /><small>{item.unit}</small></span></label>
+            <label className="quantity-cell pantry-cell"><span>Already have</span><span className="pantry-input-wrap"><input aria-label={`Already have ${item.item}`} data-testid={`pantry-${item.key}`} inputMode="decimal" min="0" step={pieceWeightLb[item.key] ? 1 : 'any'} type="number" value={item.pantryEntered || ''} onChange={(event) => onPantryChange(item.key, Math.max(0, Number(event.target.value) || 0))} /><small>{item.pantryUnit}</small></span>{pieceWeightLb[item.key] && <small className="pantry-conversion">About {pieceWeightLb[item.key]} lb each · {item.pantryEntered} {item.pantryEntered === 1 ? 'piece' : 'pieces'} ≈ {Number(item.alreadyHave.toFixed(2))} lb</small>}</label>
             <div className="quantity-cell buy-cell"><small>Buy at store</small><strong>Kroger only: {formatBuy(item.krogerBuy)}</strong><strong>Split shop · {splitStore === 'aldi' ? 'Aldi' : 'Kroger'}: {formatBuy(splitBuy)}</strong></div>
           </div>
         </li>;
-      })}</ul><div className="summary-line" style={{ marginTop: '1rem' }}><span>Kroger-only estimate</span><strong data-testid="grocery-total-kroger">{money(estimates.kroger)}</strong></div><div className="summary-line"><span>Split-shop estimate</span><strong data-testid="grocery-total-split">{money(estimates.split)}</strong></div><p className="helper">The split plan routes pantry staples and produce to Aldi; remaining items use Kroger. Gluten-free label checks are marked where relevant.</p></section></div>
+      })}</ul><div className="summary-line" style={{ marginTop: '1rem' }}><span>Kroger-only estimate</span><strong data-testid="grocery-total-kroger">{money(estimates.kroger)}</strong></div><div className="summary-line"><span>Split-shop estimate</span><strong data-testid="grocery-total-split">{money(estimates.split)}</strong></div><p className="helper">Apples and bananas are estimated loose by piece and weight; bananas use whole, unpeeled weight. Other ingredients use sample package sizes. The split plan routes pantry staples and produce to Aldi; remaining items use Kroger.</p></section></div>
     <section className="panel comparison-intro" style={{ marginTop: '1rem' }}><div style={{ display: 'flex', gap: '.75rem', alignItems: 'flex-start' }}><ListChecks size={19} aria-hidden="true" color="hsl(157 39% 31%)" /><div><strong style={{ fontSize: '.84rem' }}>A quick budget check</strong><p style={{ marginTop: '.25rem' }}>{budgetRoom >= 0 ? `The lower-cost full-week basket is ${money(listTotal)}—${money(budgetRoom)} under your target.` : `The lower-cost full-week basket is ${money(listTotal)}, or ${money(Math.abs(budgetRoom))} over target. You can compare options, but cannot confirm an over-budget basket.`}</p></div></div></section>
     <div className="button-row"><button className="secondary-button" data-testid="back-to-setup-button" onClick={onBack} type="button"><ArrowLeft size={16} aria-hidden="true" /> Edit week</button><button className="primary-button" data-testid="compare-stores-button" onClick={onContinue} type="button">Compare store plans <ArrowRight size={16} aria-hidden="true" /></button></div><p className="fine-print">Sample ingredient prices only. Both store estimates cover this exact consolidated list; no live pricing.</p>
   </>;
