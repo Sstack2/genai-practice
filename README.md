@@ -50,3 +50,6 @@ These tests evaluate the user-facing prototype. They do not validate actual groc
 
 - `artifacts/family-grocery/src/App.tsx`: meal data, sample prices, dietary substitutions, quantity scaling, grocery totals, recipe template, and store/travel estimates.
 - `artifacts/api-server/src/routes/index.ts` and `artifacts/api-server/src/routes/health.ts`: API routing currently supports a health check; there are no AI meal-generation, live pricing, or location endpoints.
+## REVISION AND EVALUATION
+The revised prototype adds pantry inputs, package-based checkout estimates, produce conversions, and an extra-low cost meal option.
+[Read the revision documentation and five test cases](revision.md) 
