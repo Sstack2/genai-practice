@@ -53,3 +53,5 @@ These tests evaluate the user-facing prototype. They do not validate actual groc
 ## REVISION AND EVALUATION
 The revised prototype adds pantry inputs, package-based checkout estimates, produce conversions, and an extra-low cost meal option.
 [Read the revision documentation and five test cases](revision.md) 
+## AI USE DISCLOSURE
+[Read the draft AI-use disclosure](ai-use-disclosure.md)
