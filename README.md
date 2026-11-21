@@ -55,3 +55,5 @@ The revised prototype adds pantry inputs, package-based checkout estimates, prod
 [Read the revision documentation and five test cases](revision.md) 
 ## AI USE DISCLOSURE
 [Read the draft AI-use disclosure](ai-use-disclosure.md)
+## Demo Video
+[Watch the BendBites draft demo](https://drive.google.com/file/d/1yOM6uWgWkp6LNDRykzvlY86qy67xw0a2/view?usp=sharing)
